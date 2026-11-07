@@ -73,7 +73,7 @@ export default async function HomePage() {
             <HeroNetwork />
           </Reveal>
         </div>
-        <div className="container grid grid-cols-2 gap-x-6 pb-14 sm:grid-cols-4 lg:grid-cols-7">
+        <div className="container grid grid-cols-2 gap-x-6 pb-14 sm:grid-cols-3 lg:grid-cols-5">
           {services.map((sv, i) => (
             <Link key={sv.id} href={`/services/${sv.slug}`} className="group flex flex-col gap-1.5 border-t border-line-dark py-5 hover:border-lime">
               <span className="font-mono text-[11px] text-lime">{pad2(i + 1)}</span>
@@ -104,7 +104,7 @@ export default async function HomePage() {
       {/* SERVICES */}
       <section className="bg-white">
         <div className="container space-y-14 py-24 md:py-32">
-          <SectionHeading eyebrow="Core services" title="Seven disciplines. One integrated delivery team." action={{ href: "/services", label: "All services" }} />
+          <SectionHeading eyebrow="Core services" title="Every layer of your ICT infrastructure. One delivery team." action={{ href: "/services", label: "All services" }} />
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {services.map((sv, i) => (
               <Reveal key={sv.id} delay={(i % 4) * 0.06}>

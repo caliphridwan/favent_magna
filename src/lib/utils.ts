@@ -50,6 +50,7 @@ export const partnerCategoryLabels: Record<string, string> = {
   STORAGE: "Data Centre & Storage",
   CONNECTIVITY: "Connectivity & Internet Management",
   CLOUD_PRODUCTIVITY: "Cloud & Productivity",
+  UNIFIED_COMMUNICATIONS: "Unified Communications",
   OTHER: "Additional Platforms",
 };
 

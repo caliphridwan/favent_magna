@@ -20,6 +20,8 @@ import {
   ShoppingBag,
   School,
   Briefcase,
+  TrafficCone,
+  Package,
   type LucideIcon,
 } from "lucide-react";
 
@@ -45,6 +47,8 @@ export const icons: Record<string, LucideIcon> = {
   retail: ShoppingBag,
   school: School,
   briefcase: Briefcase,
+  traffic: TrafficCone,
+  package: Package,
 };
 
 export const iconOptions = Object.keys(icons).map((k) => ({ value: k, label: k }));
