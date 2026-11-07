@@ -6,7 +6,7 @@
  *
  *   npm run content:import
  *
- * Not touched: logos/images, WhatsApp number, admins, enquiries, projects,
+ * Not touched: logos/images, admins, enquiries, projects,
  * FAQs, newsletter, and the published state of industries.
  * WARNING: edits made in the admin to the overwritten fields will be replaced.
  */

@@ -14,7 +14,7 @@ Company content (About copy, mission, vision, values, approach, services, OEM pa
 |---|---|
 | Logo (light + dark) and favicon — upload the files from the old site (`/wp-content/uploads/2023/03/Transparent-b.png`, `Transparent-j.png`, `Transparent-e.png`) | Admin → Homepage & settings · replace `public/favicon.svg` |
 | Partner logos — upload the authentic logos | Admin → Partners |
-| WhatsApp number (none on the old site), business hours, real LinkedIn company URL | Admin → Homepage & settings → Contact / Social |
+| Business hours, real LinkedIn company URL | Admin → Homepage & settings → Contact / Social |
 | Corporate profile PDF | Admin → Homepage & settings → Company |
 | Confirm formal partner status (the old site said "certified distributor" / "authorised supplier"; the new copy says "OEM-backed" until confirmed). Put confirmed status in each partner's *Verified partner status* field | Admin → Partners |
 | Sprintly and RAY — in the brief but not on the old site; hidden until confirmed | Admin → Partners |

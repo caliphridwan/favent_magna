@@ -54,6 +54,7 @@ export const settings = {
   ctaBody: "Book an appointment with our team and we'll review your requirements and recommend the right approach.",
   address: "71, GSS Shopping Plaza\nFate GRA, Ilorin\nKwara State, Nigeria",
   phone: "+234 704 181 5111",
+  whatsapp: "2347064823202", // +234 706 482 3202 — digits only for wa.me links
   email: "info@faventmagna.com",
   mapEmbedUrl: "https://www.google.com/maps?q=71+GSS+Shopping+Plaza,+Fate+GRA,+Ilorin,+Kwara+State,+Nigeria&output=embed",
   facebookUrl: "https://facebook.com/faventmagna",
