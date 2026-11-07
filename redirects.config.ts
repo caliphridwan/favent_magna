@@ -1,25 +1,20 @@
 /**
- * 301 redirects from the OLD faventmagna.com URLs to the new structure.
+ * 301 redirects from the OLD faventmagna.com (WordPress) URLs to the new structure.
  *
- * IMPORTANT: The old site could not be crawled while this project was built.
- * Before launch, export the old URL list (Google Search Console → Pages,
- * or the old sitemap.xml) and map every indexed URL that changes below.
- * URLs that stay the same need no entry.
+ * Old site pages (Nov 2026): /, /about/, /solutions/, /partnerships/, /contact/
+ *  • /about/ and /contact/ keep the same path (Next.js strips the trailing slash with a permanent redirect).
+ *  • /solutions/ keeps its path — it now hosts Business Solutions, which links to every service.
+ *  • /partnerships/ → /partners (below).
  *
- * The entries below are COMMON patterns only — confirm each against the
- * real old URLs and delete any that don't apply.
+ * Before switching DNS, check Google Search Console → Pages for any other
+ * indexed URLs (e.g. old blog posts) and add them here.
  */
 export const legacyRedirects: { from: string; to: string }[] = [
-  { from: "/index.html", to: "/" },
+  { from: "/partnerships", to: "/partners" },
+  { from: "/partnerships/:path*", to: "/partners" },
   { from: "/index.php", to: "/" },
   { from: "/home", to: "/" },
   { from: "/about-us", to: "/about" },
-  { from: "/about.html", to: "/about" },
   { from: "/contact-us", to: "/contact" },
-  { from: "/contact.html", to: "/contact" },
   { from: "/our-services", to: "/services" },
-  { from: "/services.html", to: "/services" },
-  { from: "/our-partners", to: "/partners" },
-  { from: "/oem-partners", to: "/partners" },
-  // { from: "/cyber-security", to: "/services/cybersecurity-solutions" },
 ];

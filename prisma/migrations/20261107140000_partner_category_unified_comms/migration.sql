@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "PartnerCategory" ADD VALUE 'UNIFIED_COMMUNICATIONS';

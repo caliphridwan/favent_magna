@@ -86,6 +86,7 @@ const partnerCategoryOptions = [
   { value: "STORAGE", label: "Data Centre & Storage" },
   { value: "CONNECTIVITY", label: "Connectivity & Internet Management" },
   { value: "CLOUD_PRODUCTIVITY", label: "Cloud & Productivity" },
+  { value: "UNIFIED_COMMUNICATIONS", label: "Unified Communications" },
   { value: "OTHER", label: "Additional Platforms" },
 ];
 

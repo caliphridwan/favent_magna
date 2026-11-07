@@ -17,6 +17,7 @@
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "admin:create": "node scripts/create-admin.mjs",
+    "content:import": "node scripts/import-content.mjs",
     "postinstall": "prisma generate"
   },
   "prisma": {

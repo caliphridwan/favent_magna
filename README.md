@@ -6,23 +6,24 @@ The redesigned **faventmagna.com**: a Next.js 15 (App Router) site with a Postgr
 
 ---
 
-## ⚠️ Read first — what still needs real company input
+## ⚠️ Read first — what still needs company input
 
-The old faventmagna.com **could not be crawled** while this was built (it was unreachable from the build environment). So nothing from the old site has been copied yet, and no company facts have been invented. Before launch:
+Company content (About copy, mission, vision, values, approach, services, OEM partners, contact details and the homepage testimonial) has been imported from the existing faventmagna.com into `prisma/content.mjs`. Still to do before launch:
 
 | Item | Where to fix |
 |---|---|
-| Logo (light + dark), favicon | Admin → Homepage & settings · replace `public/favicon.svg` |
-| Address, phone, WhatsApp, email, business hours, map | Admin → Homepage & settings → Contact |
-| Company introduction, About text, mission, vision | Admin → Homepage & settings, Admin → Pages & SEO → About |
+| Logo (light + dark) and favicon — upload the files from the old site (`/wp-content/uploads/2023/03/Transparent-b.png`, `Transparent-j.png`, `Transparent-e.png`) | Admin → Homepage & settings · replace `public/favicon.svg` |
+| Partner logos — upload the authentic logos | Admin → Partners |
+| Business hours, real LinkedIn company URL | Admin → Homepage & settings → Contact / Social |
 | Corporate profile PDF | Admin → Homepage & settings → Company |
-| Service descriptions (seeded drafts based on the service list — **review them**) | Admin → Services |
-| Partner logos (authentic assets only) and categories for **Sprintly, Zyteco, RAY** (seeded as "Additional Platforms") | Admin → Partners |
+| Confirm formal partner status (the old site said "certified distributor" / "authorised supplier"; the new copy says "OEM-backed" until confirmed). Put confirmed status in each partner's *Verified partner status* field | Admin → Partners |
+| Sprintly and RAY — in the brief but not on the old site; hidden until confirmed | Admin → Partners |
+| Service details (capabilities/applications/benefits) expanded from the old one-line descriptions — **review** | Admin → Services |
 | Industries (seeded as **unpublished drafts** — publish only sectors actually served) | Admin → Industries |
-| Projects — **none seeded**. A project can only be published once marked *verified* | Admin → Projects |
-| Testimonials / FAQs — none seeded; add genuine ones only | Admin → Testimonials / FAQs |
-| Old URLs → 301 redirects | `redirects.config.ts` (see "Preserving SEO") |
+| Projects — none seeded. A project can only be published once marked *verified* | Admin → Projects |
 | Privacy notice wording (have it reviewed against the NDPA) | Admin → Pages & SEO → /privacy |
+
+**Database already seeded with the earlier placeholders?** Run `npx prisma migrate dev` (adds the new partner category) and then `npm run content:import` once. It overwrites settings, pages, services, partners and solutions with the imported content.
 
 The admin **Overview** page lists the missing contact/brand items until they're filled in.
 
@@ -57,7 +58,9 @@ npm run typecheck && npm run lint && npm run build && npm start
 
 ```
 prisma/schema.prisma        Data model (16 models, enums, indexes, cascades)
-prisma/seed.mjs             Idempotent seed (brief content only)
+prisma/content.mjs          Site content (imported from the old site + brief)
+prisma/seed.mjs             Idempotent seed (creates missing rows only)
+scripts/import-content.mjs  Overwrite DB content from content.mjs
 redirects.config.ts         301 map from old URLs
 src/middleware.ts           Protects /admin and /api/admin
 src/app/(site)/             Public pages
