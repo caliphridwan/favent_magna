@@ -10,6 +10,9 @@ import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { ServiceCard, ProjectCard, PartnerGroups, parsePairs } from "@/components/site/cards";
 import { CtaBand } from "@/components/site/CtaBand";
+import { TextReveal } from "@/components/site/motion/TextReveal";
+import { Parallax } from "@/components/site/motion/Parallax";
+import { PartnerMarquee } from "@/components/site/motion/Marquee";
 
 export const revalidate = 600;
 
@@ -44,44 +47,57 @@ export default async function HomePage() {
 
   const why = parsePairs(s.whyItems, defaultWhy);
   const steps = parsePairs(s.approachSteps, defaultSteps);
-  const [h1Lead, h1Last] = (() => {
-    const words = s.heroHeadline.trim().split(" ");
-    return words.length > 1 ? [words.slice(0, -1).join(" "), words.at(-1)] : ["", s.heroHeadline];
-  })();
 
   return (
     <>
       {/* HERO */}
       <section className="relative overflow-hidden border-b border-charcoal bg-ink text-white">
         <div className="container grid items-center gap-14 pb-16 pt-20 md:pt-28 lg:grid-cols-[1.15fr_1fr]">
-          <Reveal className="space-y-7">
-            {s.heroEyebrow ? <p className="eyebrow text-lime">{s.heroEyebrow}</p> : null}
-            <h1 className="h-display">
-              {h1Lead} <span className="text-lime">{h1Last}</span>
-            </h1>
-            <p className="max-w-xl text-lg font-light leading-relaxed text-[#B5B5B5] md:text-[19px]">{s.heroSubtext}</p>
-            <div className="flex flex-wrap gap-3.5 pt-2">
+          <div className="space-y-7">
+            {s.heroEyebrow ? (
+              <Reveal y={12}>
+                <p className="eyebrow flex items-center gap-3 text-lime">
+                  <span className="relative flex h-2 w-2" aria-hidden>
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime opacity-60" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-lime" />
+                  </span>
+                  {s.heroEyebrow}
+                </p>
+              </Reveal>
+            ) : null}
+            <TextReveal text={s.heroHeadline} accentLast className="h-display" delay={0.1} />
+            <Reveal delay={0.55}>
+              <p className="max-w-xl text-lg font-light leading-relaxed text-[#B5B5B5] md:text-[19px]">{s.heroSubtext}</p>
+            </Reveal>
+            <Reveal delay={0.7} className="flex flex-wrap gap-3.5 pt-2">
               <Link href="/services" className="btn btn-lg btn-lime">
                 {s.heroPrimaryCta} <ArrowRight className="h-[18px] w-[18px]" aria-hidden />
               </Link>
               <Link href="/contact" className="btn btn-lg btn-ghost-dark">
                 {s.heroSecondaryCta}
               </Link>
-            </div>
-          </Reveal>
-          <Reveal delay={0.15}>
-            <HeroNetwork />
+            </Reveal>
+          </div>
+          <Reveal delay={0.3} y={40}>
+            <Parallax offset={40}>
+              <HeroNetwork />
+            </Parallax>
           </Reveal>
         </div>
         <div className="container grid grid-cols-2 gap-x-6 pb-14 sm:grid-cols-3 lg:grid-cols-5">
           {services.map((sv, i) => (
-            <Link key={sv.id} href={`/services/${sv.slug}`} className="group flex flex-col gap-1.5 border-t border-line-dark py-5 hover:border-lime">
-              <span className="font-mono text-[11px] text-lime">{pad2(i + 1)}</span>
-              <span className="text-sm text-[#D4D4D4] group-hover:text-white">{sv.title}</span>
-            </Link>
+            <Reveal key={sv.id} delay={0.8 + i * 0.05} y={12}>
+              <Link href={`/services/${sv.slug}`} className="group relative flex flex-col gap-1.5 border-t border-line-dark py-5">
+                <span className="absolute inset-x-0 -top-px h-px origin-left scale-x-0 bg-lime transition-transform duration-500 group-hover:scale-x-100" aria-hidden />
+                <span className="font-mono text-[11px] text-lime">{pad2(i + 1)}</span>
+                <span className="text-sm text-[#D4D4D4] transition-colors group-hover:text-white">{sv.title}</span>
+              </Link>
+            </Reveal>
           ))}
         </div>
       </section>
+
+      <PartnerMarquee items={partners.map((p) => ({ id: p.id, name: p.name, logoUrl: p.logoUrl }))} />
 
       {/* INTRO */}
       <section id="about" className="bg-mist">
@@ -107,7 +123,7 @@ export default async function HomePage() {
           <SectionHeading eyebrow="Core services" title="Every layer of your ICT infrastructure. One delivery team." action={{ href: "/services", label: "All services" }} />
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {services.map((sv, i) => (
-              <Reveal key={sv.id} delay={(i % 4) * 0.06}>
+              <Reveal key={sv.id} delay={(i % 4) * 0.08} y={32} className="h-full">
                 <ServiceCard s={sv} index={i} />
               </Reveal>
             ))}

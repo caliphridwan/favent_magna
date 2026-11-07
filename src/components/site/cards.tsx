@@ -7,10 +7,10 @@ import { cn, optimisedUrl, pad2, partnerCategoryLabels } from "@/lib/utils";
 export function ServiceCard({ s, index }: { s: { slug: string; title: string; icon: string; shortDescription: string }; index: number }) {
   const Icon = getIcon(s.icon);
   return (
-    <Link href={`/services/${s.slug}`} className="card-lift group flex min-h-[270px] flex-col gap-5 rounded-[20px] border border-line bg-mist p-8">
+    <Link href={`/services/${s.slug}`} data-spotlight className="card-lift spotlight group flex h-full min-h-[270px] flex-col gap-5 overflow-hidden rounded-[20px] border border-line bg-mist p-8 hover:shadow-[0_24px_48px_-24px_rgba(5,5,5,0.25)]">
       <div className="flex items-center justify-between">
-        <span className="flex h-[52px] w-[52px] items-center justify-center rounded-[14px] bg-ink text-lime transition-colors group-hover:bg-lime group-hover:text-ink">
-          <Icon className="h-6 w-6" aria-hidden />
+        <span className="flex h-[52px] w-[52px] items-center justify-center rounded-[14px] bg-ink text-lime transition-all duration-300 group-hover:-rotate-6 group-hover:scale-110 group-hover:bg-lime group-hover:text-ink">
+          <Icon className="h-6 w-6 transition-transform duration-300 group-hover:rotate-6" aria-hidden />
         </span>
         <span className="font-mono text-xs text-muted">{pad2(index + 1)}</span>
       </div>
@@ -27,7 +27,7 @@ type ProjectCardData = { slug: string; title: string; sector: string | null; yea
 
 export function ProjectCard({ p }: { p: ProjectCardData }) {
   return (
-    <Link href={`/projects/${p.slug}`} className="card-lift group flex flex-col overflow-hidden rounded-[22px] border border-line bg-white">
+    <Link href={`/projects/${p.slug}`} data-spotlight className="card-lift spotlight group flex flex-col overflow-hidden rounded-[22px] border border-line bg-white">
       <div className="relative aspect-[4/3] bg-charcoal">
         {p.coverImageUrl ? (
           <Image src={optimisedUrl(p.coverImageUrl, 900)} alt={p.title} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
