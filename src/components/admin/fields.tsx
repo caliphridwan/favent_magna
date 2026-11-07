@@ -86,7 +86,7 @@ export function GalleryField({ name, defaultValue }: { name: string; defaultValu
     setBusy(true);
     setError(null);
     try {
-      const urls = [];
+      const urls: string[] = [];
       for (const f of Array.from(files)) urls.push(await upload(f));
       setItems((prev) => [...prev, ...urls.map((url) => ({ url, alt: "" }))]);
     } catch (e) {
