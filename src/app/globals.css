@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-white font-sans text-ink;
+  }
+  ::selection {
+    background: #80c83f;
+    color: #050505;
+  }
+  :focus-visible {
+    outline: 2px solid #80c83f;
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply font-mono text-xs uppercase tracking-[0.18em];
+  }
+  .h-display {
+    @apply text-[clamp(2.75rem,6vw,5.25rem)] font-semibold leading-[0.98] tracking-tightest;
+  }
+  .h-section {
+    @apply text-[clamp(2rem,3.6vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.03em];
+  }
+  .btn {
+    @apply inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 text-[15px] font-semibold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-lg {
+    @apply h-14 px-7;
+  }
+  .btn-lime {
+    @apply bg-lime text-ink hover:bg-lime-light;
+  }
+  .btn-ink {
+    @apply bg-ink text-white hover:bg-charcoal;
+  }
+  .btn-ghost-dark {
+    @apply border border-[#3A3A3A] text-white hover:border-lime hover:text-lime;
+  }
+  .btn-ghost-light {
+    @apply border border-ink/80 text-ink hover:bg-ink hover:text-white;
+  }
+  .link-underline {
+    @apply inline-flex items-center gap-2 border-b-2 border-lime pb-1 font-semibold text-ink transition-colors hover:text-lime-ink;
+  }
+  .card-lift {
+    @apply transition duration-300 hover:-translate-y-1 hover:border-lime;
+  }
+  .field-label {
+    @apply mb-2 block text-sm font-medium;
+  }
+  .field-input {
+    @apply block w-full rounded-xl border border-line bg-white px-4 py-3 text-[15px] text-ink placeholder:text-muted/70 focus:border-lime focus:outline-none focus:ring-2 focus:ring-lime/30;
+  }
+  .field-input-dark {
+    @apply block w-full rounded-xl border border-line-dark bg-[#0D0D0D] px-4 py-3 text-[15px] text-white placeholder:text-muted-dark/70 focus:border-lime focus:outline-none focus:ring-2 focus:ring-lime/30;
+  }
+  .field-error {
+    @apply mt-1.5 text-sm text-red-600;
+  }
+  .prose-fm {
+    @apply max-w-none text-[17px] leading-[1.75] text-[#33372F] [&_p]:mb-5;
+  }
+  .bg-grid-dark {
+    background-image: linear-gradient(#1a1a1a 1px, transparent 1px), linear-gradient(90deg, #1a1a1a 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+}

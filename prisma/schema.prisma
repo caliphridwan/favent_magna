@@ -1,0 +1,368 @@
+// Favent Magna Nigeria Limited — content & enquiry database
+// PostgreSQL via Prisma ORM
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────── Enums
+
+enum AdminRole {
+  SUPER_ADMIN // everything, incl. administrators & site settings
+  EDITOR      // all content + enquiries
+  VIEWER      // read-only dashboard + enquiries
+}
+
+enum PartnerCategory {
+  NETWORKING
+  SECURITY
+  PHYSICAL_SECURITY
+  CABLING
+  STORAGE
+  CONNECTIVITY
+  CLOUD_PRODUCTIVITY
+  OTHER
+}
+
+enum EnquiryType {
+  CONTACT
+  CONSULTATION
+  SERVICE
+  TRAINING
+}
+
+enum EnquiryStatus {
+  NEW
+  IN_PROGRESS
+  CLOSED
+  SPAM
+}
+
+enum SubscriberStatus {
+  ACTIVE
+  UNSUBSCRIBED
+}
+
+// ─────────────────────────────────────────────── Site & pages
+
+/// Singleton row (id = 1) holding global company information and homepage copy.
+model SiteSetting {
+  id                 Int      @id @default(1)
+  companyName        String   @default("Favent Magna Nigeria Limited")
+  tagline            String?
+  logoUrl            String?
+  logoDarkUrl        String?
+  heroEyebrow        String?
+  heroHeadline       String
+  heroSubtext        String
+  heroPrimaryCta     String   @default("Explore Our Services")
+  heroSecondaryCta   String   @default("Speak With Our Team")
+  heroImageUrl       String?
+  introHeading       String?
+  introBody          String?
+  aboutBody          String?
+  mission            String?
+  vision             String?
+  /// One item per line: "Title | Description"
+  whyItems           String[]
+  /// One step per line: "Title | Description"
+  approachSteps      String[]
+  ctaHeading         String?
+  ctaBody            String?
+  address            String?
+  phone              String?
+  phoneAlt           String?
+  whatsapp           String? /// international format without "+", e.g. 2348012345678
+  email              String?
+  businessHours      String?
+  mapEmbedUrl        String?
+  profilePdfUrl      String?
+  facebookUrl        String?
+  linkedinUrl        String?
+  xUrl               String?
+  instagramUrl       String?
+  defaultMetaTitle   String?
+  defaultMetaDesc    String?
+  ogImageUrl         String?
+  updatedAt          DateTime @updatedAt
+}
+
+/// Editable header + SEO metadata for each fixed public route.
+model Page {
+  id              String   @id @default(cuid())
+  path            String   @unique /// e.g. "/", "/about", "/services"
+  name            String
+  heading         String?
+  intro           String?
+  body            String?
+  metaTitle       String?
+  metaDescription String?
+  ogImageUrl      String?
+  noIndex         Boolean  @default(false)
+  updatedAt       DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────────── Administrators
+
+model Admin {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         AdminRole @default(EDITOR)
+  active       Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  assignedEnquiries Enquiry[] @relation("EnquiryAssignee")
+}
+
+// ─────────────────────────────────────────────── Services & partners
+
+model ServiceCategory {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  order     Int       @default(0)
+  services  Service[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Service {
+  id               String           @id @default(cuid())
+  title            String
+  slug             String           @unique
+  icon             String           @default("network") /// key from src/lib/icons.ts
+  shortDescription String
+  intro            String?
+  body             String?
+  heroImageUrl     String?
+  capabilities     String[]
+  applications     String[]
+  benefits         String[]
+  order            Int              @default(0)
+  published        Boolean          @default(true)
+  featured         Boolean          @default(true)
+  metaTitle        String?
+  metaDescription  String?
+  categoryId       String?
+  category         ServiceCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  partners         Partner[]        @relation("ServicePartners")
+  related          Service[]        @relation("RelatedServices")
+  relatedOf        Service[]        @relation("RelatedServices")
+  solutions        Solution[]       @relation("SolutionServices")
+  projects         Project[]        @relation("ProjectServices")
+  enquiries        Enquiry[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([published, order])
+  @@index([categoryId])
+}
+
+model Partner {
+  id          String          @id @default(cuid())
+  name        String
+  slug        String          @unique
+  category    PartnerCategory @default(OTHER)
+  logoUrl     String?
+  websiteUrl  String?
+  description String?
+  /// Show a "verified partner status" note only when the status has been confirmed.
+  statusNote  String?
+  order       Int             @default(0)
+  published   Boolean         @default(true)
+  services    Service[]       @relation("ServicePartners")
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([published, category, order])
+}
+
+model Solution {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  summary     String
+  body        String?
+  icon        String    @default("layers")
+  order       Int       @default(0)
+  published   Boolean   @default(true)
+  services    Service[] @relation("SolutionServices")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([published, order])
+}
+
+model Industry {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  summary   String?
+  icon      String   @default("building")
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, order])
+}
+
+// ─────────────────────────────────────────────── Projects
+
+model Project {
+  id              String         @id @default(cuid())
+  title           String
+  slug            String         @unique
+  client          String?
+  sector          String?
+  location        String?
+  year            Int?
+  summary         String
+  challenge       String?
+  solution        String?
+  outcome         String?
+  coverImageUrl   String?
+  /// Only verified projects may be published (enforced in the admin action).
+  verified        Boolean        @default(false)
+  published       Boolean        @default(false)
+  featured        Boolean        @default(false)
+  order           Int            @default(0)
+  metaTitle       String?
+  metaDescription String?
+  images          ProjectImage[]
+  services        Service[]      @relation("ProjectServices")
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([published, featured, order])
+}
+
+model ProjectImage {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  order     Int     @default(0)
+
+  @@index([projectId, order])
+}
+
+// ─────────────────────────────────────────────── Training
+
+model TrainingProgramme {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  summary         String
+  description     String?
+  duration        String?
+  deliveryMode    String? /// e.g. "On-site", "Classroom", "Virtual"
+  audience        String?
+  outline         String[]
+  imageUrl        String?
+  order           Int       @default(0)
+  published       Boolean   @default(true)
+  metaTitle       String?
+  metaDescription String?
+  enquiries       Enquiry[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([published, order])
+}
+
+// ─────────────────────────────────────────────── Enquiries, social proof, newsletter
+
+model Enquiry {
+  id           String             @id @default(cuid())
+  type         EnquiryType        @default(CONTACT)
+  status       EnquiryStatus      @default(NEW)
+  name         String
+  email        String
+  phone        String?
+  organisation String?
+  subject      String?
+  message      String
+  preferredDate String?
+  sourcePath   String?
+  ipAddress    String?
+  userAgent    String?
+  internalNotes String?
+  serviceId    String?
+  service      Service?           @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  trainingId   String?
+  training     TrainingProgramme? @relation(fields: [trainingId], references: [id], onDelete: SetNull)
+  assigneeId   String?
+  assignee     Admin?             @relation("EnquiryAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  @@index([status, createdAt])
+  @@index([type])
+  @@index([email])
+}
+
+model Testimonial {
+  id           String   @id @default(cuid())
+  quote        String
+  author       String
+  role         String?
+  organisation String?
+  order        Int      @default(0)
+  published    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([published, order])
+}
+
+model Faq {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  category  String?
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, category, order])
+}
+
+model NewsletterSubscriber {
+  id               String           @id @default(cuid())
+  email            String           @unique
+  status           SubscriberStatus @default(ACTIVE)
+  unsubscribeToken String           @unique @default(cuid())
+  source           String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([status])
+}
+
+// ─────────────────────────────────────────────── Media library (Cloudinary)
+
+model Media {
+  id        String   @id @default(cuid())
+  publicId  String   @unique
+  url       String
+  format    String?
+  width     Int?
+  height    Int?
+  bytes     Int?
+  alt       String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

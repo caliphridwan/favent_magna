@@ -1,0 +1,40 @@
+# Render Blueprint — web service + managed PostgreSQL.
+# Add secrets (AUTH_SECRET, Cloudinary, Resend) in the Render dashboard after the first deploy.
+databases:
+  - name: faventmagna-db
+    databaseName: faventmagna
+    plan: basic-256mb
+
+services:
+  - type: web
+    name: faventmagna-web
+    runtime: node
+    plan: starter
+    buildCommand: npm ci && npx prisma migrate deploy && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://faventmagna.com
+      - key: DATABASE_URL
+        fromDatabase:
+          name: faventmagna-db
+          property: connectionString
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLOUDINARY_FOLDER
+        value: faventmagna
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        value: Favent Magna <no-reply@faventmagna.com>
+      - key: ENQUIRY_NOTIFY_EMAIL
+        sync: false
